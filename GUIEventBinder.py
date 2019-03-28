@@ -18,7 +18,8 @@ def init(Pool):
     Main_Member_Menu_Handler.bindEvent()
     Config_Button_Handler.bindEvent()
     Config_Choice_Handler.bindEvent()
-
+    Config_TextCtrl_Handler.bindEvent()
+    Config_ListCtrl_Selected_Handler.bindEvent()
 
 def getUserOpFromTextCtrl():
     global _user_pool_
@@ -231,7 +232,7 @@ def bind_config_button_event(handler, source, attr_names):
 class Config_Button_Handler:
     @staticmethod
     def bindEvent():
-        events = ('login', 'load_course', 'load_usercourse', 'export', 'save_settings')
+        events = ('login', 'load_course', 'load_usercourse', 'save_settings')
         bind_config_button_event(Config_Button_Handler, gui.frame_configure, events)
 
     @staticmethod
@@ -243,6 +244,8 @@ class Config_Button_Handler:
         def add_or_delete(userop):
             if not userop.user.ready:
                 _user_pool_.remove(userop)
+            else:
+                gui.frame_configure.textctrl_account.Enable(False)
             gui.frame_configure.textctrl_password.Clear()
 
         if not gui.frame_configure.textctrl_account.IsEnabled():
@@ -285,24 +288,28 @@ class Config_Button_Handler:
 
         userop.join(gui.frame_configure.button_load_usercourse.Enable, args=(True,))
 
+    # @staticmethod
+    # def export(event):
+    #     pass
+
     @staticmethod
-    def export(event):
-        pass
+    def save_settings(event):
+        dlg = wx.MessageDialog(gui.frame_configure, u'你确定要保存设置吗?',
+                               u'提示', wx.YES_NO | wx.ICON_QUESTION)
+        if dlg.ShowModal() == wx.YES:
+            userop = getUserOpFromTextCtrl()
+            userop.user.keys = gui.frame_configure.textctrl_keys.GetLineText(0)
 
-    def save_settings(self):
-        userop = getUserOpFromTextCtrl()
-        userop.user.keys = gui.frame_configure.textctrl_keys.GetLineText(0)
+            userop.user.force_post = gui.frame_configure.checkbox_force.GetValue()
 
-        userop.user.force_post = gui.frame_configure.checkbox_force.GetValue()
+            timer_refresh = gui.frame_configure.spinctrl_timer.GetValue()
+            if userop.user.timer_refresh != timer_refresh:
+                userop.user.timer_refresh = timer_refresh
+                userop.cancelGetNotice()
+                userop.timingGetNotice()
 
-        timer_refresh = gui.frame_configure.spinctrl_timer.GetValue()
-        if userop.user.timer_refresh != timer_refresh:
-            userop.user.timer_refresh = timer_refresh
-            userop.cancelGetNotice()
-            userop.timingGetNotice()
-
-        userop.user.delay_range = [gui.frame_configure.spinctrl_start.GetValue(),
-                                   gui.frame_configure.spinctrl_end.GetValue()]
+            userop.user.delay_range = [gui.frame_configure.spinctrl_start.GetValue(),
+                                       gui.frame_configure.spinctrl_end.GetValue()]
 
 
 # Frame Configure Choice Handler
@@ -320,17 +327,47 @@ class Config_Choice_Handler:
 
         userop.taker.puller.season_code.setSeletedIndex(selected_index)
 
+
 # Frame Configure Choice Handler
 class Config_TextCtrl_Handler:
     @staticmethod
     def bindEvent():
-        gui.frame_configure.Bind(wx.EVT_CHOICE, Config_Choice_Handler.season,
-                                 gui.frame_configure.choice_season)
+        gui.frame_configure.Bind(wx.EVT_TEXT, Config_TextCtrl_Handler.keys,
+                                 gui.frame_configure.textctrl_keys)
 
     @staticmethod
     def keys(event):
-        selected_index = gui.frame_configure.choice_season.GetCurrentSelection()
+        if gui.frame_configure.listctrl_optional.style == 0:    # STYLE_OPTIONAL
 
-        userop = getUserOpFromTextCtrl()
+            userop = getUserOpFromTextCtrl()
+            if userop:
+                userop.taker.puller.displayTarget()
 
-        userop.taker.puller.season_code.setSeletedIndex(selected_index)
+
+def bind_config_menu_event(handler, source, attr_names):
+    for i in attr_names:
+        gui.frame_configure.Bind(wx.EVT_MENU, getattr(handler, i), getattr(source, i))
+
+
+# Frame Configure Selected Handler
+class Config_ListCtrl_Selected_Handler:
+    @staticmethod
+    def bindEvent():
+        items = ('delete',)
+        bind_config_menu_event(Config_ListCtrl_Selected_Handler, gui.frame_configure.listctrl_selected.menu, items)
+
+    @staticmethod
+    def delete(event):
+        index = gui.frame_configure.listctrl_selected.GetFirstSelected()
+        if index != -1:
+            userop = getUserOpFromTextCtrl()
+            course = userop.taker.puller.selected.index(index)
+            dlg = wx.MessageDialog(gui.frame_configure, u'你确定要退选课程：[%s] ?' % course.__str__(),
+                             u'提示', wx.YES_NO | wx.ICON_QUESTION)
+            if dlg.ShowModal() == wx.YES:
+                if userop.taker.postCancel():
+                    wx.MessageDialog(gui.frame_configure, u'退选成功!', u'完成', wx.OK | wx.ICON_INFORMATION)
+                else:
+                    wx.MessageDialog(gui.frame_configure, u'退选失败，(详情请看主窗口的logs的ServerMsg)。', u'错误',
+                                     wx.OK | wx.ICON_ERROR)
+

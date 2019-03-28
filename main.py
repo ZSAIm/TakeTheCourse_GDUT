@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+# author: ZSAIm
+# github: https://github.com/ZSAIm/TakeTheCourse_GDUT
+# 				programming by python3.5
 
 
 import threading

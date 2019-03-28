@@ -136,7 +136,7 @@ class UserPool(object):
             threading.Thread(target=i.verify).start()
 
     def getUserOp(self, account):
-        return self.members[account]
+        return self.members.get(account, None)
 
     def getUserIndex(self, user):
         return self.queue.index(user.op)

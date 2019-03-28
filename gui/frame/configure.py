@@ -20,7 +20,7 @@ class FrameConfigure(wx.Dialog):
 
         self.button_load_course = None
         self.button_load_usercourse = None
-        self.button_export = None
+        # self.button_export = None
         self.button_login = None
         self.button_save_settings = None
 
@@ -79,17 +79,17 @@ class FrameConfigure(wx.Dialog):
         self.button_load_usercourse = wx.Button(sizer_control_pannel.GetStaticBox(), wx.ID_ANY, u"加载个人课表",
                                                    wx.DefaultPosition, wx.DefaultSize, 0)
 
-        self.button_export = wx.Button(sizer_control_pannel.GetStaticBox(), wx.ID_ANY, u"导出课表",
-                                       wx.DefaultPosition, wx.DefaultSize, 0)
-
+        # self.button_export = wx.Button(sizer_control_pannel.GetStaticBox(), wx.ID_ANY, u"导出课表",
+        #                                wx.DefaultPosition, wx.DefaultSize, 0)
+        # self.button_export.Enable(False)
         self.choice_season = wx.Choice(sizer_control_pannel.GetStaticBox(), wx.ID_ANY,
                                        wx.DefaultPosition, wx.DefaultSize, [], 0)
         self.choice_season.SetSelection(0)
 
         sizer_control_pannel.Add(self.button_load_course, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         sizer_control_pannel.Add(self.button_load_usercourse, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        sizer_control_pannel.Add(self.button_export, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        sizer_control_pannel.Add(self.choice_season, 0,  wx.ALIGN_CENTER | wx.ALL, 5)
+        # sizer_control_pannel.Add(self.button_export, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        sizer_control_pannel.Add(self.choice_season, 1,  wx.ALIGN_CENTER | wx.ALL, 5)
 
         self.sizer_left.Add(sizer_control_pannel, 0, wx.EXPAND, 5)
 

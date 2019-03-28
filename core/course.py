@@ -239,7 +239,12 @@ class Puller(object):
             # self.user.op.join(exec_foo=self.pullUserCourse)
         # finally:
 
+    def displayTarget(self):
+        gui.frame_configure.listctrl_optional.DeleteAllItems()
 
+        for i in self.optional[self.user.keys]:
+            data = (i.kcmc, i.xf, i.teaxm, i.pkrs, i.jxbrs, i.kcflmc)
+            gui.frame_configure.listctrl_optional.Append(data)
 
     def displayUserCourse(self):
         gui.frame_configure.listctrl_optional.initUserCourseColumn()
@@ -263,8 +268,8 @@ class Puller(object):
         gui.frame_configure.listctrl_optional.initOptionColumn()
         gui.frame_configure.listctrl_selected.initSelectedColumn()
 
-        if not self.optional.getAll():
-            self.pullCourses()
+        # if not self.optional.getAll():
+        self.pullCourses()
 
         for i in self.optional.getAll():
             data = (i.kcmc, i.xf, i.teaxm, i.pkrs, i.jxbrs, i.kcflmc)
@@ -564,8 +569,6 @@ class CourseItem(object):
         self.teaxms = row.get('teaxms')
         self.xq = row.get('xq')
         self.zc = row.get('zc')
-
-
 
 
     def __str__(self):

@@ -30,38 +30,30 @@ class Selected_ListCtrl(BasicListCtrl):
 
 
 
-
-
 class Selected_Menu(wx.Menu):
     def __init__(self, *args):
         wx.Menu.__init__(self, *args)
 
-        self.view = None
-        self.configure = None
-        self.add = None
+        # self.view = None
+        # self.configure = None
+        # self.add = None
         self.delete = None
 
         self.initItems()
 
     def initItems(self):
-        self.view = wx.MenuItem(self, wx.ID_ANY, u'View', wx.EmptyString, wx.ITEM_NORMAL)
-        self.Append(self.view)
-
-        self.configure = wx.MenuItem(self, wx.ID_ANY, u'Configure', wx.EmptyString, wx.ITEM_NORMAL)
-        self.Append(self.configure)
-
-        self.AppendSeparator()
-
-        self.add = wx.MenuItem(self, wx.ID_ANY, u'Add', wx.EmptyString, wx.ITEM_NORMAL)
-        self.Append(self.add)
-
-        self.AppendSeparator()
+        # self.view = wx.MenuItem(self, wx.ID_ANY, u'View', wx.EmptyString, wx.ITEM_NORMAL)
+        # self.Append(self.view)
+        #
+        # self.configure = wx.MenuItem(self, wx.ID_ANY, u'Configure', wx.EmptyString, wx.ITEM_NORMAL)
+        # self.Append(self.configure)
+        #
+        # self.AppendSeparator()
+        #
+        # self.add = wx.MenuItem(self, wx.ID_ANY, u'Add', wx.EmptyString, wx.ITEM_NORMAL)
+        # self.Append(self.add)
+        #
+        # self.AppendSeparator()
 
         self.delete = wx.MenuItem(self, wx.ID_ANY, u'Delete', wx.EmptyString, wx.ITEM_NORMAL)
         self.Append(self.delete)
-
-
-    def bindEvent(self):
-        pass
-
-
